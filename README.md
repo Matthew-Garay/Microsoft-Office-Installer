@@ -1,100 +1,95 @@
+<div align="center">
+
 # Microsoft Office Installer
 
-Herramienta para instalar Microsoft Office en Windows desde PowerShell con un solo comando. Disponible en dos modos: interfaz gráfica (GUI) y línea de comandos (CLI).
+**Instalador de Microsoft Office (LTSC y Professional Plus) en Windows** con un solo comando de PowerShell, con interfaz gráfica (GUI) y línea de comandos (CLI).
+
+[![PowerShell](https://img.shields.io/badge/PowerShell-5.1-5391FE?style=flat-square)](https://learn.microsoft.com/powershell/)
+[![Windows](https://img.shields.io/badge/Windows-10%20%7C%2011-0078D6?style=flat-square)]()
+[![Sin dependencias](https://img.shields.io/badge/Sin%20dependencias-externas-2ea44f?style=flat-square)]()
+
+</div>
 
 ---
 
-## Versiones de Office soportadas
+## Descripción
 
-| Versión | Edición |
-|---------|---------|
-| Office LTSC Professional Plus 2024 | 64 bits / 32 bits |
-| Office LTSC Professional Plus 2021 | 64 bits / 32 bits |
-| Office Professional Plus 2019 | 64 bits / 32 bits |
-| Office Professional Plus 2016 | 64 bits / 32 bits |
-| Office Professional Plus 2013 | 64 bits / 32 bits |
+Scripts de **PowerShell** que instalan Microsoft Office en Windows con un comando. Descarga el **Office Deployment Tool (ODT)** desde los servidores de Microsoft, arma el archivo de configuración con las opciones elegidas y ejecuta `setup.exe /configure`.
 
-También soporta **Project** y **Visio** (Professional y Standard) como complementos opcionales.
+Está dirigido a administradores y usuarios avanzados que necesitan desplegar Office de forma rápida y reproducible, sin instaladores manuales.
 
----
+## Características
 
-## Uso
+- **Dos modos:** interfaz gráfica (`instalar-gui.ps1`) y consola (`instalar-cli.ps1`).
+- **Ediciones soportadas:** LTSC Professional Plus **2024** y **2021**; Professional Plus **2019**, **2016** y **2013**.
+- **Arquitectura:** 64 o 32 bits.
+- **Complementos:** Project y Visio opcionales.
+- **10 idiomas:** inglés, español, francés, alemán, portugués de Brasil, italiano, holandés, polaco, ruso y japonés.
+- **Flujo guiado:** cada elección se confirma antes de tocar el sistema.
+- **Tema claro/oscuro** y tarjetas con logos en la versión GUI.
+- **Sin dependencias externas** y sin tocar la licencia (no incluye activación).
 
-### Interfaz gráfica (GUI)
+## Tecnologías utilizadas
 
-Descarga y ejecuta la versión con ventana gráfica:
+- **Lenguaje:** PowerShell 5.0+
+- **Herramientas:** Office Deployment Tool (ODT) de Microsoft
+- **Plataforma:** Windows 10 / 11
+
+## Requisitos previos
+
+- **Windows 10 u 11**
+- **PowerShell 5.0 o superior**
+- **Permisos de administrador**
+- **.NET Framework 4.5 o superior**
+- **Internet** (el ODT y los archivos de Office se descargan de Microsoft)
+
+## Instalación
+
+Abre PowerShell como **administrador**. Si es la primera vez que ejecutas scripts:
+
+```powershell
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Bypass
+```
+
+**Versión con ventana (GUI):**
 
 ```powershell
 irm https://raw.githubusercontent.com/Matthew-Garay/Microsoft-Office-installer/main/instalar-gui.ps1 | iex
 ```
 
-Enlace directo: `https://raw.githubusercontent.com/Matthew-Garay/Microsoft-Office-installer/main/instalar-gui.ps1`
-
-### Línea de comandos (CLI)
-
-Descarga y ejecuta la versión en consola:
+**Versión en consola (CLI):**
 
 ```powershell
 irm https://raw.githubusercontent.com/Matthew-Garay/Microsoft-Office-installer/main/instalar-cli.ps1 | iex
 ```
 
-Enlace directo: `https://raw.githubusercontent.com/Matthew-Garay/Microsoft-Office-installer/main/instalar-cli.ps1`
+También puedes descargar el `.ps1` y ejecutarlo con clic derecho → *Ejecutar con PowerShell*.
 
-La versión CLI también es interactiva: pregunta versión, idioma y aplicaciones
-en pantalla, muestra un resumen y pide confirmación antes de instalar, porque
-una instalación de Office no tiene vuelta atrás.
+## Uso
 
----
+Ambas versiones te guían por: **versión → idioma → aplicaciones → resumen → confirmación**. Nada se instala sin tu confirmación, porque una instalación de Office no se deshace con facilidad.
 
-## Requisitos
+## Estructura del proyecto
 
-| Requisito | Detalle |
-|-----------|---------|
-| **Sistema operativo** | Windows 10 / Windows 11 |
-| **Arquitectura** | 64 bits o 32 bits (se detecta automáticamente) |
-| **PowerShell** | 5.0 o superior |
-| **Permisos** | Administrador (obligatorio) |
-| **Framework** | .NET Framework 4.5 o superior |
-| **Conexión** | Internet (descarga el ODT y los archivos de Office desde los servidores de Microsoft) |
-
----
-
-## Características (código)
-
-- **PowerShell nativo** — sin dependencias externas, solo cmdlets del sistema
-- **Descarga automática del ODT** — descarga el Office Deployment Tool desde los servidores oficiales de Microsoft con `System.Net.WebClient`
-- **Fuentes de ODT en lista** — `$script:odtUrls` se recorre en orden y el script pasa a la siguiente si una falla; hoy hay una sola configurada, la de Microsoft
-- **Detección de arquitectura** — `[Environment]::Is64BitOperatingSystem` decide entre `OfficeClientEdition="64"` y `"32"`
-- **Configuración XML dinámica** — genera el archivo de configuración de Office en tiempo de ejecución según la versión y aplicaciones seleccionadas
-- **Excluye lo que no se pidió** — las aplicaciones no seleccionadas y los servicios incluidos (Bing, Groove, Lync, OneDrive, Teams) van como `ExcludeApp`
-- **GUI con Windows Forms** — interfaz gráfica con modo claro/oscuro (interruptor en el encabezado), tarjetas de aplicaciones con logo en el color oficial de cada app, selector de idioma con banderas dibujadas y resumen en vivo antes de instalar
-- **CLI con terminal UI** — interfaz de consola con banner tipográfico, pasos numerados y barras de progreso con bloques (`█`)
-- **Flujo guiado en ambas ediciones** — versión, idioma y aplicaciones se eligen en pantalla, paso a paso
-- **Confirmación previa** — ambas ediciones piden confirmación antes de instalar
-- **Registros de instalación** — logs en `%TEMP%\OfficeInstallerGUI_Install.log` y `%TEMP%\OfficeInstallerCLI_Install.log`
-- **Manejo de errores** — try/catch con captura de excepciones y escritura en logs
-- **Execution Policy** — soporte para `Set-ExecutionPolicy` en primera ejecución
-- **Limpieza automática** — elimina archivos temporales tras la instalación
-
----
-
-## Licencia
-
-Esta herramienta **instala** Office; no lo activa. Necesitas una licencia válida
-de Office para usarlo. La versión GUI incluye un intento opcional de activación
-con Microsoft Activation Scripts, pero la versión CLI no lo hace.
-
----
+```
+Microsoft-Office-installer/
+├── instalar-gui.ps1        # Instalador con interfaz gráfica
+├── instalar-cli.ps1        # Instalador de línea de comandos
+├── index.html              # Página de presentación del proyecto
+└── README.md
+```
 
 ## Notas
 
-### Cómo instalar
+- Este proyecto **instala** Office, no lo activa: necesitas una licencia propia.
+- Los temporales se eliminan solos al terminar.
+- Registro de cada ejecución: `%TEMP%\OfficeInstallerGUI_Install.log` y `%TEMP%\OfficeInstallerCLI_Install.log`.
 
-1. Abre PowerShell como administrador (clic derecho → "Ejecutar como administrador" o `Win + X` → "Terminal (Admin)")
-2. Ejecuta uno de los comandos:
-   - **GUI**: `irm https://raw.githubusercontent.com/Matthew-Garay/Microsoft-Office-installer/main/instalar-gui.ps1 | iex`
-   - **CLI**: `irm https://raw.githubusercontent.com/Matthew-Garay/Microsoft-Office-installer/main/instalar-cli.ps1 | iex`
-3. Sigue las instrucciones en pantalla para seleccionar versión, idioma y aplicaciones
-4. Espera a que la instalación termine y reinicia el equipo
+## Licencia
 
-Si es tu primera vez ejecutando scripts en PowerShell, puede aparecer un aviso de seguridad. Usa `Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Bypass` para permitir scripts locales.
+Proyecto educativo y de código abierto; puedes usarlo libremente.
+
+## Autor
+
+**Matthew Garay** — [GitHub](https://github.com/Matthew-Garay)
+
