@@ -16,9 +16,10 @@
 ```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
-     ```powershell
+
+```powershell
      irm https://raw.githubusercontent.com/Matthew-Garay/Microsoft-Office-Installer/main/instalar-gui.ps1 | iex
-     ```
+```
 
    - **Command Line (CLI):**
      ```powershell
