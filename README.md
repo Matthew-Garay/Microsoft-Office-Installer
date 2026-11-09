@@ -13,6 +13,9 @@
 2. Copy and paste one of the commands below and press **Enter**:
 
    - **Graphical Interface (GUI):**
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
      ```powershell
      irm https://raw.githubusercontent.com/Matthew-Garay/Microsoft-Office-Installer/main/instalar-gui.ps1 | iex
      ```
@@ -22,7 +25,7 @@
      irm https://raw.githubusercontent.com/Matthew-Garay/Microsoft-Office-Installer/main/instalar-cli.ps1 | iex
      ```
 
-3. In the menu that appears, select your preferred Office edition, architecture, language, and specific applications.
+4. In the menu that appears, select your preferred Office edition, architecture, language, and specific applications.
 
 ---
 
