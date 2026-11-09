@@ -12,12 +12,12 @@
 
 2. Copy and paste one of the commands below and press **Enter**:
 
-   - **Graphical Interface (GUI):**
+ - **Graphical Interface (GUI):**
 ```powershell
      irm https://raw.githubusercontent.com/Matthew-Garay/Microsoft-Office-Installer/main/instalar-gui.ps1 | iex
 ```
 
-   - **Command Line (CLI):**
+ - **Command Line (CLI):**
 ```powershell
     Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
