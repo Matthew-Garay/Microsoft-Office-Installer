@@ -741,8 +741,6 @@ function aplicarTema(tema) {
   try { localStorage.setItem("tema", tema); } catch (e) {}
 }
 
-function cambiarTema() {
-  aplicarTema(document.body.classList.contains("claro") ? "obscuro" : "claro");
 }
 
 (function temaInicial() {
