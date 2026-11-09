@@ -71,7 +71,7 @@
 
 <div align="center">
 
-# Web Interface - [https://matthew-garay.github.io/Microsoft-Office-Installer/](https://matthew-garay.github.io/Microsoft-Office-Installer/)
+#### Web Interface - [https://matthew-garay.github.io/Microsoft-Office-Installer/](https://matthew-garay.github.io/Microsoft-Office-Installer/)
 
 Latest Version: v1.0
 
