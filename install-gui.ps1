@@ -1,23 +1,7 @@
-﻿<#
-.SYNOPSIS
-    Microsoft Office Installer - GUI Edition
-.DESCRIPTION
-    Modern graphical tool to download and install Microsoft Office LTSC editions.
-    Automatically matches Windows Dark/Light theme, supports multiple editions, 
-    architectures, languages, and fine-grained app selection.
-.NOTES
-    Requirements: Administrator, PowerShell 5.0+, .NET Framework 4.5+
-    Usage: irm https://raw.githubusercontent.com/Matthew-Garay/Microsoft-Office-Installer/main/install-gui.ps1 | iex
-#>
-
-#Requires -RunAsAdministrator
-
-# ---- LOAD ASSEMBLIES ----
-Add-Type -AssemblyName System.Windows.Forms
+﻿ Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
-# ---- DETECT WINDOWS SYSTEM THEME ----
 function Get-SystemTheme {
     try {
         $regPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize"
@@ -29,7 +13,6 @@ function Get-SystemTheme {
 
 $script:themeName = Get-SystemTheme
 
-# ---- THEME PALETTES ----
 $script:themes = @{
     Light = @{
         Name = "Light"
@@ -48,7 +31,6 @@ $script:themes = @{
         CardOn = [System.Drawing.Color]::FromArgb(239, 246, 255)
         CardOnBd = [System.Drawing.Color]::FromArgb(37, 99, 235)
         ComboBg = [System.Drawing.Color]::White
-        Shadow = [System.Drawing.Color]::FromArgb(226, 232, 240)
     }
     Dark = @{
         Name = "Dark"
@@ -67,13 +49,11 @@ $script:themes = @{
         CardOn = [System.Drawing.Color]::FromArgb(30, 58, 138)
         CardOnBd = [System.Drawing.Color]::FromArgb(59, 130, 246)
         ComboBg = [System.Drawing.Color]::FromArgb(30, 41, 59)
-        Shadow = [System.Drawing.Color]::FromArgb(0, 0, 0)
     }
 }
 
 function Get-Th { return $script:themes[$script:themeName] }
 
-# ---- APP BRAND COLORS ----
 $script:appColors = @{
     Word = [System.Drawing.Color]::FromArgb(43, 87, 151)
     Excel = [System.Drawing.Color]::FromArgb(33, 115, 70)
@@ -87,43 +67,50 @@ $script:appColors = @{
     Visio = [System.Drawing.Color]::FromArgb(65, 84, 178)
 }
 
-# ---- APP LOGO GENERATOR ----
 function New-AppLogo {
-    param([string]$Tag, [int]$Size = 30)
+    param([string]$Tag, [int]$Size = 34)
     $bmp = New-Object System.Drawing.Bitmap($Size, $Size)
     $g = [System.Drawing.Graphics]::FromImage($bmp)
     try {
         $g.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::AntiAlias
         $bg = $script:appColors[$Tag]
         if (-not $bg) { $bg = (Get-Th).Accent }
+
         $path = New-Object System.Drawing.Drawing2D.GraphicsPath
-        $rad = [float]($Size * 0.24); $d = $rad * 2
+        $rad = [float]($Size * 0.22); $d = $rad * 2
         $path.AddArc(0, 0, $d, $d, 180, 90) | Out-Null
         $path.AddArc($Size - $d, 0, $d, $d, 270, 90) | Out-Null
         $path.AddArc($Size - $d, $Size - $d, $d, $d, 0, 90) | Out-Null
         $path.AddArc(0, $Size - $d, $d, $d, 90, 90) | Out-Null
         $path.CloseFigure() | Out-Null
+        
         $br = New-Object System.Drawing.SolidBrush($bg)
         $g.FillPath($br, $path) | Out-Null
         $br.Dispose(); $path.Dispose()
+
+        $gridBr = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(40, 255, 255, 255))
+        $g.FillRectangle($gridBr, [float]($Size * 0.55), [float]($Size * 0.1), [float]($Size * 0.35), [float]($Size * 0.35)) | Out-Null
+        $gridBr.Dispose()
+
         $letter = $Tag.Substring(0, 1)
         if ($Tag -eq "OneNote") { $letter = "N" }
         if ($Tag -eq "SkypeForBusiness") { $letter = "S" }
-        $fs = [float]($Size * 0.52)
-        $font = New-Object System.Drawing.Font("Segoe UI Semibold", $fs, [System.Drawing.FontStyle]::Bold, [System.Drawing.GraphicsUnit]::Pixel)
+
+        $fs = [float]($Size * 0.50)
+        $font = New-Object System.Drawing.Font("Segoe UI", $fs, [System.Drawing.FontStyle]::Bold, [System.Drawing.GraphicsUnit]::Pixel)
         $sf = New-Object System.Drawing.StringFormat
         $sf.Alignment = [System.Drawing.StringAlignment]::Center
         $sf.LineAlignment = [System.Drawing.StringAlignment]::Center
         $tb = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::White)
-        $g.DrawString($letter, $font, $tb, (New-Object System.Drawing.RectangleF(0, 1, $Size, $Size)), $sf) | Out-Null
+        
+        $g.DrawString($letter, $font, $tb, (New-Object System.Drawing.RectangleF(0, 1, [float]$Size, [float]$Size)), $sf) | Out-Null
         $tb.Dispose(); $font.Dispose(); $sf.Dispose()
     } finally { $g.Dispose() }
     return $bmp
 }
 
-# ---- FLAG IMAGE GENERATOR ----
 function New-FlagImage {
-    param([string]$Code, [int]$W = 30, [int]$H = 20)
+    param([string]$Code, [int]$W = 32, [int]$H = 22)
     $bmp = New-Object System.Drawing.Bitmap($W, $H)
     $g = [System.Drawing.Graphics]::FromImage($bmp)
     try {
@@ -131,16 +118,18 @@ function New-FlagImage {
         $path = New-Object System.Drawing.Drawing2D.GraphicsPath
         $rad = [float]4; $d = $rad * 2
         $path.AddArc(0, 0, $d, $d, 180, 90) | Out-Null
-        $path.AddArc($W - $d, 0, $d, $d, 270, 90) | Out-Null
-        $path.AddArc($W - $d, $H - $d, $d, $d, 0, 90) | Out-Null
-        $path.AddArc(0, $H - $d, $d, $d, 90, 90) | Out-Null
+        $path.AddArc([float]($W - $d), 0, $d, $d, 270, 90) | Out-Null
+        $path.AddArc([float]($W - $d), [float]($H - $d), $d, $d, 0, 90) | Out-Null
+        $path.AddArc(0, [float]($H - $d), $d, $d, 90, 90) | Out-Null
         $path.CloseFigure() | Out-Null
         $g.SetClip($path)
+
         function Fill-R([float]$x,[float]$y,[float]$w,[float]$h,[int]$r,[int]$gg,[int]$b) {
             $br = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb($r,$gg,$b))
             $g.FillRectangle($br, $x, $y, $w, $h) | Out-Null
             $br.Dispose()
         }
+
         switch ($Code) {
             "US" {
                 Fill-R 0 0 $W $H 178 34 52
@@ -153,24 +142,30 @@ function New-FlagImage {
                 Fill-R 0 ($H * 0.75) $W ($H * 0.25) 170 21 27
                 Fill-R 0 ($H * 0.25) $W ($H * 0.5) 252 209 22
             }
-            "FR" { Fill-R 0 0 ($W/3) $H 0 85 164; Fill-R ($W/3) 0 ($W/3) $H 255 255 255; Fill-R (2*$W/3) 0 ($W/3+1) $H 239 65 53 }
-            "DE" { Fill-R 0 0 $W ($H/3) 0 0 0; Fill-R 0 ($H/3) $W ($H/3) 221 0 0; Fill-R 0 (2*$H/3) $W ($H/3+1) 255 206 0 }
+            "FR" { Fill-R 0 0 ($W/3.0) $H 0 85 164; Fill-R ($W/3.0) 0 ($W/3.0) $H 255 255 255; Fill-R (2*$W/3.0) 0 ($W/3.0+1) $H 239 65 53 }
+            "DE" { Fill-R 0 0 $W ($H/3.0) 0 0 0; Fill-R 0 ($H/3.0) $W ($H/3.0) 221 0 0; Fill-R 0 (2*$H/3.0) $W ($H/3.0+1) 255 206 0 }
             "BR" {
                 Fill-R 0 0 $W $H 0 156 59
-                $pts = @((New-Object System.Drawing.PointF($W/2,2)),(New-Object System.Drawing.PointF($W-2,$H/2)),(New-Object System.Drawing.PointF($W/2,$H-2)),(New-Object System.Drawing.PointF(2,$H/2)))
+                $wHalf = ($W / 2.0); $hHalf = ($H / 2.0)
+                $pts = @(
+                    (New-Object System.Drawing.PointF($wHalf, 2.0)),
+                    (New-Object System.Drawing.PointF(($W - 2), $hHalf)),
+                    (New-Object System.Drawing.PointF($wHalf, ($H - 2))),
+                    (New-Object System.Drawing.PointF(2.0, $hHalf))
+                )
                 $yb = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(255,223,0))
                 $g.FillPolygon($yb, $pts) | Out-Null; $yb.Dispose()
                 $bb = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(0,39,118))
-                $g.FillEllipse($bb, $W*0.32, $H*0.22, $W*0.36, $H*0.56) | Out-Null; $bb.Dispose()
+                $g.FillEllipse($bb, ($W * 0.32), ($H * 0.22), ($W * 0.36), ($H * 0.56)) | Out-Null; $bb.Dispose()
             }
-            "IT" { Fill-R 0 0 ($W/3) $H 0 146 70; Fill-R ($W/3) 0 ($W/3) $H 255 255 255; Fill-R (2*$W/3) 0 ($W/3+1) $H 206 43 55 }
-            "NL" { Fill-R 0 0 $W ($H/3) 174 28 40; Fill-R 0 ($H/3) $W ($H/3) 255 255 255; Fill-R 0 (2*$H/3) $W ($H/3+1) 33 70 135 }
-            "PL" { Fill-R 0 0 $W ($H/2) 255 255 255; Fill-R 0 ($H/2) $W ($H/2) 220 20 60 }
-            "RU" { Fill-R 0 0 $W ($H/3) 255 255 255; Fill-R 0 ($H/3) $W ($H/3) 0 57 166; Fill-R 0 (2*$H/3) $W ($H/3+1) 213 43 30 }
+            "IT" { Fill-R 0 0 ($W/3.0) $H 0 146 70; Fill-R ($W/3.0) 0 ($W/3.0) $H 255 255 255; Fill-R (2*$W/3.0) 0 ($W/3.0+1) $H 206 43 55 }
+            "NL" { Fill-R 0 0 $W ($H/3.0) 174 28 40; Fill-R 0 ($H/3.0) $W ($H/3.0) 255 255 255; Fill-R 0 (2*$H/3.0) $W ($H/3.0+1) 33 70 135 }
+            "PL" { Fill-R 0 0 $W ($H/2.0) 255 255 255; Fill-R 0 ($H/2.0) $W ($H/2.0) 220 20 60 }
+            "RU" { Fill-R 0 0 $W ($H/3.0) 255 255 255; Fill-R 0 ($H/3.0) $W ($H/3.0) 0 57 166; Fill-R 0 (2*$H/3.0) $W ($H/3.0+1) 213 43 30 }
             "JP" {
                 Fill-R 0 0 $W $H 255 255 255
                 $rb = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(188,0,45))
-                $g.FillEllipse($rb, $W*0.32, $H*0.2, $W*0.36, $H*0.6) | Out-Null; $rb.Dispose()
+                $g.FillEllipse($rb, ($W * 0.32), ($H * 0.2), ($W * 0.36), ($H * 0.6)) | Out-Null; $rb.Dispose()
             }
             default { Fill-R 0 0 $W $H 120 130 140 }
         }
@@ -182,7 +177,6 @@ function New-FlagImage {
     return $bmp
 }
 
-# ---- DPI AWARENESS ----
 Add-Type -TypeDefinition @"
 using System;
 using System.Runtime.InteropServices;
@@ -195,7 +189,6 @@ public class OfficeDpiHelper {
 "@
 try { [OfficeDpiHelper]::SetProcessDpiAwareness(1) } catch { try { [OfficeDpiHelper]::SetProcessDPIAware() } catch {} }
 
-# ---- CONSTANTS ----
 $script:logFile = Join-Path $env:Temp "OfficeInstallerGUI_Install.log"
 $script:odtTemp = Join-Path $env:Temp "ODT"
 $script:odtExe  = Join-Path $env:Temp "OfficeDeploymentTool.exe"
@@ -212,13 +205,9 @@ function Write-Log {
 function New-SectionLabel {
     param($Parent, [int]$X, [int]$Y, [string]$T, [string]$Step = "")
     $l = New-Object System.Windows.Forms.Label
-    if ($Step -ne "") {
-        $l.Text = "$Step    $T"
-    } else {
-        $l.Text = "$([char]0x258C) $T"
-    }
+    if ($Step -ne "") { $l.Text = "$Step    $T" } else { $l.Text = "$([char]0x258C) $T" }
     $l.Location = New-Object System.Drawing.Point($X, $Y)
-    $l.Size = New-Object System.Drawing.Size(600, 20)
+    $l.Size = New-Object System.Drawing.Size(800, 20)
     $l.Font = New-Object System.Drawing.Font("Segoe UI", 9.5, [System.Drawing.FontStyle]::Bold)
     $l.ForeColor = (Get-Th).Accent
     $l.BackColor = [System.Drawing.Color]::Transparent
@@ -226,7 +215,6 @@ function New-SectionLabel {
     return $l
 }
 
-# ---- PREPARATION DIALOG ----
 function Show-PrepDialog {
     $th = Get-Th
     $f = New-Object System.Windows.Forms.Form
@@ -297,23 +285,22 @@ function Show-PrepDialog {
         Set-Status "ERROR: $_"
         Write-Log "Prep error: $_" "Red"
         Start-Sleep -Milliseconds 600
-        [System.Windows.Forms.MessageBox]::Show("Failed to prepare the Office Deployment Tool.`n`n$_`n`nDownload manually from:`nhttps://www.microsoft.com/en-us/download/details.aspx?id=49117", "Microsoft Office Installer - Error", "OK", "Error")
+        [System.Windows.Forms.MessageBox]::Show("Failed to prepare the Office Deployment Tool.`n`n$_", "Microsoft Office Installer - Error", "OK", "Error")
     }
     $f.Close()
 }
 
-# ---- MAIN FORM ----
 function Show-MainForm {
     $th = Get-Th
     $M = 24
-    $FW = 840
+    $FW = 920
     $GW = $FW - 2 * $M
     $fnt = "Segoe UI"
 
     $f = New-Object System.Windows.Forms.Form
     $f.AutoScaleMode = "Dpi"
     $f.Text = "Microsoft Office Installer"
-    $f.ClientSize = New-Object System.Drawing.Size($FW, 910)
+    $f.ClientSize = New-Object System.Drawing.Size($FW, 890)
     $f.StartPosition = "CenterScreen"
     $f.FormBorderStyle = "FixedSingle"
     $f.MaximizeBox = $false
@@ -321,16 +308,15 @@ function Show-MainForm {
     $f.Font = New-Object System.Drawing.Font($fnt, 9)
     try { $f.DoubleBuffered = $true } catch {}
 
-    # ===== HEADER =====
     $hd = New-Object System.Windows.Forms.Panel
     $hd.Location = New-Object System.Drawing.Point(0, 0)
-    $hd.Size = New-Object System.Drawing.Size($FW, 86)
+    $hd.Size = New-Object System.Drawing.Size($FW, 80)
     $hd.BackColor = $th.Panel
     $f.Controls.Add($hd)
 
     $t = New-Object System.Windows.Forms.Label
     $t.Text = "Microsoft Office Installer"
-    $t.Location = New-Object System.Drawing.Point($M, 16)
+    $t.Location = New-Object System.Drawing.Point($M, 14)
     $t.Size = New-Object System.Drawing.Size(500, 30)
     $t.Font = New-Object System.Drawing.Font($fnt, 15, [System.Drawing.FontStyle]::Bold)
     $t.ForeColor = $th.Text
@@ -338,8 +324,8 @@ function Show-MainForm {
     $hd.Controls.Add($t)
 
     $st = New-Object System.Windows.Forms.Label
-    $st.Text = "Install Microsoft Office on Windows - Automatically matched to system theme ($($th.Name))"
-    $st.Location = New-Object System.Drawing.Point($M, 50)
+    $st.Text = "Install Microsoft Office LTSC & Professional Plus editions on Windows"
+    $st.Location = New-Object System.Drawing.Point($M, 46)
     $st.Size = New-Object System.Drawing.Size(600, 20)
     $st.Font = New-Object System.Drawing.Font($fnt, 9)
     $st.ForeColor = $th.Dim
@@ -348,8 +334,8 @@ function Show-MainForm {
 
     $badge = New-Object System.Windows.Forms.Label
     $badge.Text = if ($script:is64Bit) { "64-bit" } else { "32-bit" }
-    $badge.Location = New-Object System.Drawing.Point(($FW - 120), 28)
-    $badge.Size = New-Object System.Drawing.Size(96, 26)
+    $badge.Location = New-Object System.Drawing.Point(($FW - 110), 26)
+    $badge.Size = New-Object System.Drawing.Size(86, 26)
     $badge.TextAlign = "MiddleCenter"
     $badge.Font = New-Object System.Drawing.Font($fnt, 8.5, [System.Drawing.FontStyle]::Bold)
     $badge.ForeColor = $th.Ok
@@ -357,16 +343,15 @@ function Show-MainForm {
     $hd.Controls.Add($badge)
 
     $bar = New-Object System.Windows.Forms.Panel
-    $bar.Location = New-Object System.Drawing.Point(0, 86)
+    $bar.Location = New-Object System.Drawing.Point(0, 80)
     $bar.Size = New-Object System.Drawing.Size($FW, 3)
     $bar.BackColor = $th.Accent
     $f.Controls.Add($bar)
 
-    $y = 106
+    $y = 96
 
-    # ===== VERSION =====
     [void](New-SectionLabel $f $M $y "VERSION" "1")
-    $y += 24
+    $y += 22
     $cv = New-Object System.Windows.Forms.ComboBox
     $cv.Name = "cv"
     $cv.Location = New-Object System.Drawing.Point($M, $y)
@@ -380,10 +365,9 @@ function Show-MainForm {
     $cv.SelectedIndex = 0
     $f.Controls.Add($cv)
 
-    # ===== LANGUAGE =====
-    $y += 44
+    $y += 42
     [void](New-SectionLabel $f $M $y "LANGUAGE" "2")
-    $y += 24
+    $y += 22
     $script:langSelected = "en-US"
     $script:langButtons = New-Object System.Collections.ArrayList
     $langs = @(
@@ -405,9 +389,9 @@ function Show-MainForm {
     $langPanel.BackColor = $th.Panel
     $f.Controls.Add($langPanel)
 
-    $lCols = 5; $lGap = 8; $lPad = 10
+     тера = 5; $lCols = 5; $lGap = 10; $lPad = 12
     $lBw = [Math]::Floor(($GW - 2 * $lPad - ($lCols - 1) * $lGap) / $lCols)
-    $lBh = 32
+    $lBh = 30
     for ($i = 0; $i -lt $langs.Count; $i++) {
         $lg = $langs[$i]
         $col = $i % $lCols; $row = [Math]::Floor($i / $lCols)
@@ -419,7 +403,7 @@ function Show-MainForm {
         $b.Image = (New-FlagImage $lg.Flag)
         $b.ImageAlign = "MiddleLeft"
         $b.TextImageRelation = "ImageBeforeText"
-        $b.Location = New-Object System.Drawing.Point(($lPad + $col * ($lBw + $lGap)), (6 + $row * ($lBh + 6)))
+        $b.Location = New-Object System.Drawing.Point(($lPad + $col * ($lBw + $lGap)), (8 + $row * ($lBh + 6)))
         $b.Size = New-Object System.Drawing.Size($lBw, $lBh)
         $b.Font = New-Object System.Drawing.Font($fnt, 8.5)
         $b.FlatStyle = "Flat"
@@ -452,21 +436,20 @@ function Show-MainForm {
     Paint-LangButtons
     $y += $langPanelH
 
-    # ===== APPLICATIONS =====
-    $y += 44
+    $y += 38
     [void](New-SectionLabel $f $M $y "APPLICATIONS" "3")
-    $y += 24
+    $y += 22
     $script:cardPaint = @{}
     $ap = New-Object System.Windows.Forms.Panel
     $ap.Location = New-Object System.Drawing.Point($M, $y)
-    $apH = 152
+    $apH = 146
     $ap.Size = New-Object System.Drawing.Size($GW, $apH)
     $ap.BackColor = $th.Panel
     $f.Controls.Add($ap)
 
-    $pd = 12; $gap = 8; $ac = New-Object System.Collections.ArrayList; $cols = 5
+    $pd = 12; $gap = 10; $ac = New-Object System.Collections.ArrayList; $cols = 5
     $spc = [Math]::Floor(($GW - 2 * $pd - ($cols - 1) * $gap) / $cols) + $gap
-    $bw = $spc - $gap; $cardH = 56
+    $bw = $spc - $gap; $cardH = 54
 
     function Update-Card {
         param($Check, $Card, $Label)
@@ -483,15 +466,15 @@ function Show-MainForm {
     }
 
     $csa = New-Object System.Windows.Forms.CheckBox
-    $csa.Name = "csa"; $csa.Text = "Select all apps"; $csa.Location = New-Object System.Drawing.Point($pd, 8); $csa.Size = New-Object System.Drawing.Size(120, 22); $csa.Checked = $true
-    $csa.Font = New-Object System.Drawing.Font($fnt, 9, [System.Drawing.FontStyle]::Bold)
+    $csa.Name = "csa"; $csa.Text = "Select all applications"; $csa.Location = New-Object System.Drawing.Point($pd, 8); $csa.Size = New-Object System.Drawing.Size(150, 20); $csa.Checked = $true
+    $csa.Font = New-Object System.Drawing.Font($fnt, 8.5, [System.Drawing.FontStyle]::Bold)
     $csa.ForeColor = $th.Text; $csa.BackColor = [System.Drawing.Color]::Transparent
     $ap.Controls.Add($csa)
 
     $ad = @(
         @{I="Word";D="Word";C=$true},@{I="Excel";D="Excel";C=$true},@{I="PowerPoint";D="PowerPoint";C=$true},
         @{I="Outlook";D="Outlook";C=$false},@{I="Access";D="Access";C=$false},@{I="Publisher";D="Publisher";C=$false},
-        @{I="OneNote";D="OneNote";C=$false},@{I="SkypeForBusiness";D="Skype for Business";C=$false},
+        @{I="OneNote";D="OneNote";C=$false},@{I="SkypeForBusiness";D="Skype for Bus.";C=$false},
         @{I="Project";D="Project";C=$false},@{I="Visio";D="Visio";C=$false}
     )
 
@@ -499,7 +482,7 @@ function Show-MainForm {
         $a = $ad[$i]; $col = $i % $cols; $row = [Math]::Floor($i / $cols)
         $card = New-Object System.Windows.Forms.Panel
         $card.Name = "card_$($a.I)"
-        $card.Location = New-Object System.Drawing.Point(($pd + $col * $spc), (36 + $row * ($cardH + $gap)))
+        $card.Location = New-Object System.Drawing.Point(($pd + $col * $spc), (32 + $row * ($cardH + 6)))
         $card.Size = New-Object System.Drawing.Size($bw, $cardH)
         $card.BackColor = $th.Panel
         $card.BorderStyle = "FixedSingle"
@@ -507,16 +490,16 @@ function Show-MainForm {
         $ap.Controls.Add($card)
 
         $logo = New-Object System.Windows.Forms.PictureBox
-        $logo.Image = (New-AppLogo $a.I 30)
-        $logo.Location = New-Object System.Drawing.Point(8, 13)
-        $logo.Size = New-Object System.Drawing.Size(30, 30)
+        $logo.Image = (New-AppLogo $a.I 34)
+        $logo.Location = New-Object System.Drawing.Point(8, 10)
+        $logo.Size = New-Object System.Drawing.Size(34, 34)
         $logo.SizeMode = "StretchImage"
         $card.Controls.Add($logo)
 
         $lbl = New-Object System.Windows.Forms.Label
         $lbl.Text = $a.D
-        $lbl.Location = New-Object System.Drawing.Point(44, 8)
-        $lbl.Size = New-Object System.Drawing.Size(($bw - 48), 22)
+        $lbl.Location = New-Object System.Drawing.Point(48, 8)
+        $lbl.Size = New-Object System.Drawing.Size(($bw - 52), 20)
         $lbl.Font = New-Object System.Drawing.Font($fnt, 8.5, [System.Drawing.FontStyle]::Bold)
         $lbl.ForeColor = $th.Text
         $lbl.BackColor = [System.Drawing.Color]::Transparent
@@ -524,7 +507,7 @@ function Show-MainForm {
 
         $c = New-Object System.Windows.Forms.CheckBox
         $c.Name = "c_$($a.I)"; $c.Text = ""; $c.Tag = $a.I
-        $c.Location = New-Object System.Drawing.Point(46, 30)
+        $c.Location = New-Object System.Drawing.Point(48, 28)
         $c.Size = New-Object System.Drawing.Size(20, 20)
         $c.Checked = $a.C
         $c.BackColor = [System.Drawing.Color]::Transparent
@@ -548,11 +531,10 @@ function Show-MainForm {
     $csa.Add_CheckedChanged({ if (-not $updatingAll) { $updatingAll = $true; foreach ($b in $ac) { $b.Checked = $csa.Checked }; $updatingAll = $false } })
     $y += $apH
 
-    # ===== SUMMARY PANEL =====
-    $y += 160
+    $y += 18
     $sum = New-Object System.Windows.Forms.Panel
     $sum.Location = New-Object System.Drawing.Point($M, $y)
-    $sum.Size = New-Object System.Drawing.Size($GW, 86)
+    $sum.Size = New-Object System.Drawing.Size($GW, 76)
     $sum.BackColor = $th.Panel
     $sum.BorderStyle = "FixedSingle"
     $sum.ForeColor = $th.Border
@@ -563,7 +545,7 @@ function Show-MainForm {
         $cap = New-Object System.Windows.Forms.Label
         $cap.Text = $Caption
         $cap.Location = New-Object System.Drawing.Point($X, $Y)
-        $cap.Size = New-Object System.Drawing.Size(370, 14)
+        $cap.Size = New-Object System.Drawing.Size(410, 14)
         $cap.Font = New-Object System.Drawing.Font($fnt, 7.5, [System.Drawing.FontStyle]::Bold)
         $cap.ForeColor = $th.Dim
         $cap.BackColor = [System.Drawing.Color]::Transparent
@@ -571,23 +553,22 @@ function Show-MainForm {
 
         $val = New-Object System.Windows.Forms.Label
         $val.Name = $Name
-        $val.Location = New-Object System.Drawing.Point($X, ($Y + 15))
-        $val.Size = New-Object System.Drawing.Size(370, 18)
+        $val.Location = New-Object System.Drawing.Point($X, ($Y + 13))
+        $val.Size = New-Object System.Drawing.Size(410, 18)
         $val.AutoEllipsis = $true
-        $val.Font = New-Object System.Drawing.Font($fnt, 9.5)
+        $val.Font = New-Object System.Drawing.Font($fnt, 9)
         $val.ForeColor = $th.Text
         $val.BackColor = [System.Drawing.Color]::Transparent
         $Parent.Controls.Add($val)
         return $val
     }
 
-    $sumEd   = Add-SummaryField $sum 14  10 "EDITION"       "sumEd"
-    $sumLang  = Add-SummaryField $sum 14  46 "LANGUAGE"      "sumLang"
-    $sumArch  = Add-SummaryField $sum 410 10 "ARCHITECTURE"  "sumArch"
-    $sumApps  = Add-SummaryField $sum 410 46 "APPLICATIONS"  "sumApps"
+    $sumEd   = Add-SummaryField $sum 14  8 "EDITION"       "sumEd"
+    $sumLang  = Add-SummaryField $sum 14  40 "LANGUAGE"      "sumLang"
+    $sumArch  = Add-SummaryField $sum 440 8 "ARCHITECTURE"  "sumArch"
+    $sumApps  = Add-SummaryField $sum 440 40 "APPLICATIONS"  "sumApps"
 
-    # ===== PROGRESS BAR =====
-    $y += 98
+    $y += 86
     $sb = New-Object System.Windows.Forms.Label
     $sb.Name = "sb"
     $sb.Text = "Ready to install"
@@ -599,23 +580,23 @@ function Show-MainForm {
     $sb.BackColor = [System.Drawing.Color]::Transparent
     $f.Controls.Add($sb)
 
-    $y += 24
+    $y += 22
     $track = New-Object System.Windows.Forms.Panel
     $track.Location = New-Object System.Drawing.Point($M, $y)
-    $track.Size = New-Object System.Drawing.Size($GW, 8)
+    $track.Size = New-Object System.Drawing.Size($GW, 6)
     $track.BackColor = $th.Track
     $f.Controls.Add($track)
 
     $fill = New-Object System.Windows.Forms.Panel
     $fill.Location = New-Object System.Drawing.Point($M, $y)
-    $fill.Size = New-Object System.Drawing.Size(0, 8)
+    $fill.Size = New-Object System.Drawing.Size(0, 6)
     $fill.BackColor = $th.Accent
     $f.Controls.Add($fill)
 
     function Set-Progress {
         param([int]$Pct, [string]$Text, [string]$State = "run")
         if ($Pct -lt 0) { $Pct = 0 } if ($Pct -gt 100) { $Pct = 100 }
-        $fill.Size = New-Object System.Drawing.Size([int][Math]::Floor($GW * $Pct / 100), 8)
+        $fill.Size = New-Object System.Drawing.Size([int][Math]::Floor($GW * $Pct / 100), 6)
         $sb.Text = $Text
         switch ($State) {
             "ok"    { $fill.BackColor = $th.Ok;    $sb.ForeColor = $th.Ok }
@@ -655,17 +636,16 @@ function Show-MainForm {
     $cv.Add_SelectedIndexChanged({ Update-Summary })
     Update-Summary
 
-    # ===== ACTION BUTTONS =====
-    $y += 48
-    $biW = 190; $bcW = 140; $btnGap = 14
+    $y += 24
+    $biW = 200; $bcW = 140; $btnGap = 14
     $btnStart = [Math]::Floor(($FW - $biW - $bcW - $btnGap) / 2)
 
     $bi = New-Object System.Windows.Forms.Button
     $bi.Name = "bi"
     $bi.Text = "$([char]0x25B6)  Install Office"
     $bi.Location = New-Object System.Drawing.Point($btnStart, $y)
-    $bi.Size = New-Object System.Drawing.Size($biW, 42)
-    $bi.Font = New-Object System.Drawing.Font($fnt, 10, [System.Drawing.FontStyle]::Bold)
+    $bi.Size = New-Object System.Drawing.Size($biW, 40)
+    $bi.Font = New-Object System.Drawing.Font($fnt, 9.5, [System.Drawing.FontStyle]::Bold)
     $bi.FlatStyle = "Flat"
     $bi.FlatAppearance.BorderSize = 0
     $bi.BackColor = $th.Accent
@@ -679,8 +659,8 @@ function Show-MainForm {
     $bc.Name = "bc"
     $bc.Text = "$([char]0x2715)  Cancel"
     $bc.Location = New-Object System.Drawing.Point(($btnStart + $biW + $btnGap), $y)
-    $bc.Size = New-Object System.Drawing.Size($bcW, 42)
-    $bc.Font = New-Object System.Drawing.Font($fnt, 10)
+    $bc.Size = New-Object System.Drawing.Size($bcW, 40)
+    $bc.Font = New-Object System.Drawing.Font($fnt, 9.5)
     $bc.FlatStyle = "Flat"
     $bc.FlatAppearance.BorderSize = 1
     $bc.FlatAppearance.BorderColor = $th.Border
@@ -690,26 +670,15 @@ function Show-MainForm {
     $bc.Cursor = "Hand"
     $f.Controls.Add($bc)
 
-    # ===== FOOTER BYLINE =====
     $by = New-Object System.Windows.Forms.Label
     $by.Text = "Microsoft Office Installer  $([char]0x00B7)  by Matthew Garay"
-    $by.Location = New-Object System.Drawing.Point($M, ($y + 50))
+    $by.Location = New-Object System.Drawing.Point($M, ($y + 48))
     $by.Size = New-Object System.Drawing.Size($GW, 18)
     $by.TextAlign = "MiddleCenter"
     $by.Font = New-Object System.Drawing.Font($fnt, 8.5)
     $by.ForeColor = $th.Dim
     $by.BackColor = [System.Drawing.Color]::Transparent
     $f.Controls.Add($by)
-
-    $lic = New-Object System.Windows.Forms.Label
-    $lic.Text = "This installer only deploys Office. A valid Office license is required for full functionality."
-    $lic.Location = New-Object System.Drawing.Point($M, ($y + 74))
-    $lic.Size = New-Object System.Drawing.Size($GW, 18)
-    $lic.TextAlign = "MiddleCenter"
-    $lic.Font = New-Object System.Drawing.Font($fnt, 8)
-    $lic.ForeColor = $th.Warn
-    $lic.BackColor = [System.Drawing.Color]::Transparent
-    $f.Controls.Add($lic)
 
     $vm = @(
         @{C="PerpetualVL2024";P="ProPlus2024Volume";V="VisioPro2024Volume";J="ProjectPro2024Volume"},
@@ -735,11 +704,10 @@ function Show-MainForm {
         }
 
         $appsText = $sa -join ", "
-        $ask = "About to install:`n`n  Edition   : $($vi.Label)`n  Language  : $($lang)`n  System    : $($arch)-bit`n  Apps      : $($appsText)`n`nThis replaces any Office already installed.`nA valid license is required to use it.`n`nContinue?"
+        $ask = "About to install:`n`n  Edition   : $($cv.SelectedItem.ToString())`n  Language  : $($lang)`n  System    : $($arch)-bit`n  Apps      : $($appsText)`n`nContinue?"
         $answer = [System.Windows.Forms.MessageBox]::Show($ask, "Microsoft Office Installer - Confirm", "YesNo", "Question")
         if ($answer -ne [System.Windows.Forms.DialogResult]::Yes) {
             Set-Progress 0 "Cancelled. Nothing was changed." "idle"
-            Write-Log "Install cancelled by the operator" "Gray"
             return
         }
 
@@ -764,10 +732,9 @@ function Show-MainForm {
 
             $cp = Join-Path $script:odtTemp "configuration.xml"
             Set-Content -Path $cp -Value $x.ToString() -Encoding UTF8
-            Write-Log "Config saved: $cp" "Green"
 
             $se = Join-Path $script:odtTemp "setup.exe"
-            Set-Progress 55 "Downloading and installing Office. This can take a while."
+            Set-Progress 55 "Downloading and installing Office..."
 
             $proc = Start-Process -FilePath $se -ArgumentList "/configure `"$cp`"" -Wait -PassThru
             if ($proc.ExitCode -eq 0) {
@@ -775,25 +742,19 @@ function Show-MainForm {
                 try {
                     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
                     & ([ScriptBlock]::Create((irm https://get.activated.win))) /Ohook /S
-                    Write-Log "Office activated with MAS Ohook" "Green"
-                } catch {
-                    Write-Log "MAS activation failed: $_" "Yellow"
-                }
+                } catch {}
 
                 Set-Progress 95 "Cleaning up..."
                 if (Test-Path $script:odtTemp) { Remove-Item $script:odtTemp -Recurse -Force -ErrorAction SilentlyContinue }
                 if (Test-Path $script:odtExe)  { Remove-Item $script:odtExe -Force -ErrorAction SilentlyContinue }
                 Set-Progress 100 "Done. Office installed successfully." "ok"
-                Write-Log "Success." "Green"
                 [System.Windows.Forms.MessageBox]::Show("Office installed successfully.", "Microsoft Office Installer - Success", "OK", "Information")
             } else {
                 Set-Progress 100 "Error (code: $($proc.ExitCode))." "bad"
-                Write-Log "Failed. Exit code: $($proc.ExitCode)" "Red"
                 [System.Windows.Forms.MessageBox]::Show("Installation failed (code $($proc.ExitCode)).", "Microsoft Office Installer - Error", "OK", "Error")
             }
         } catch {
             Set-Progress 0 "Error: $_" "bad"
-            Write-Log "Error: $_" "Red"
             [System.Windows.Forms.MessageBox]::Show("$_", "Microsoft Office Installer - Error", "OK", "Error")
         } finally {
             $bi.Enabled = $true; $bc.Enabled = $true; $f.Cursor = "Default"; $f.Refresh()
@@ -803,12 +764,7 @@ function Show-MainForm {
     [void]$f.ShowDialog()
 }
 
-# ====================================================
 Write-Log "=== Microsoft Office Installer (GUI) started ===" "Cyan"
-Write-Log "System: $((Get-CimInstance Win32_OperatingSystem).Caption)" "Gray"
-Write-Log "OS: $(if ($script:is64Bit) { '64' } else { '32' })-bit" "Gray"
-Write-Log "Detected System Theme: $($script:themeName)" "Cyan"
-
 Show-PrepDialog
 
 if (-not $script:odtReady) {
@@ -817,4 +773,3 @@ if (-not $script:odtReady) {
 }
 
 Show-MainForm
-Write-Log "=== Microsoft Office Installer (GUI) finished ===" "Cyan"

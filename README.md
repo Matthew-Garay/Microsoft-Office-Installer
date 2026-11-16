@@ -1,95 +1,73 @@
-<div align="center">
+<h1 align="center">Microsoft Office Installer</h1>
 
-# Microsoft Office Installer
+<p align="center">Open-source Windows tool to download and install Microsoft Office LTSC and Professional Plus editions using a single PowerShell command, featuring both a Graphical User Interface (GUI) and a Command Line Interface (CLI).</p>
 
-**Instalador de Microsoft Office (LTSC y Professional Plus) en Windows** con un solo comando de PowerShell, con interfaz gráfica (GUI) y línea de comandos (CLI).
+<p align="center">
+  <a href="https://learn.microsoft.com/powershell/"><img src="https://img.shields.io/badge/PowerShell-5.1-5391FE?style=flat-square" alt="PowerShell"></a>
+  <a href="#"><img src="https://img.shields.io/badge/Windows-10%20%7C%2011-0078D6?style=flat-square" alt="Windows"></a>
+  <a href="#"><img src="https://img.shields.io/badge/Zero-External%20Dependencies-2ea44f?style=flat-square" alt="Zero Dependencies"></a>
+</p>
 
-[![PowerShell](https://img.shields.io/badge/PowerShell-5.1-5391FE?style=flat-square)](https://learn.microsoft.com/powershell/)
-[![Windows](https://img.shields.io/badge/Windows-10%20%7C%2011-0078D6?style=flat-square)]()
-[![Sin dependencias](https://img.shields.io/badge/Sin%20dependencias-externas-2ea44f?style=flat-square)]()
+<hr>
 
-</div>
+## How to Install Microsoft Office / LTSC?
+
+### Method 1 - PowerShell ❤️
+
+1. Click the **Start Menu**, type `PowerShell`, right-click it, and select **Run as administrator**.
+
+2. Copy and paste the command below and press **Enter**:
+
+   - **GUI Edition (Recommended - Window interface):**
+     ```powershell
+     irm [https://raw.githubusercontent.com/Matthew-Garay/Microsoft-Office-Installer/main/install-gui.ps1](https://raw.githubusercontent.com/Matthew-Garay/Microsoft-Office-Installer/main/install-gui.ps1) | iex
+     ```
+
+   - **CLI Edition (Console interface):**
+     ```powershell
+     irm [https://raw.githubusercontent.com/Matthew-Garay/Microsoft-Office-Installer/main/install-cli.ps1](https://raw.githubusercontent.com/Matthew-Garay/Microsoft-Office-Installer/main/install-cli.ps1) | iex
+     ```
+
+3. Follow the interactive wizard on screen to choose your version, language, and preferred apps. Nothing installs without your final confirmation.
 
 ---
 
-## Descripción
+### Method 2 - Manual Execution
 
-Scripts de **PowerShell** que instalan Microsoft Office en Windows con un comando. Descarga el **Office Deployment Tool (ODT)** desde los servidores de Microsoft, arma el archivo de configuración con las opciones elegidas y ejecuta `setup.exe /configure`.
+1. Download or clone this repository to your computer.
+2. Open PowerShell as **Administrator** in the folder containing the scripts.
+3. Run either `install-gui.ps1` or `install-cli.ps1`. *(Note: If script execution is restricted, run `Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Bypass` first).*
 
-Está dirigido a administradores y usuarios avanzados que necesitan desplegar Office de forma rápida y reproducible, sin instaladores manuales.
+---
 
-## Características
+## Features
 
-- **Dos modos:** interfaz gráfica (`instalar-gui.ps1`) y consola (`instalar-cli.ps1`).
-- **Ediciones soportadas:** LTSC Professional Plus **2024** y **2021**; Professional Plus **2019**, **2016** y **2013**.
-- **Arquitectura:** 64 o 32 bits.
-- **Complementos:** Project y Visio opcionales.
-- **10 idiomas:** inglés, español, francés, alemán, portugués de Brasil, italiano, holandés, polaco, ruso y japonés.
-- **Flujo guiado:** cada elección se confirma antes de tocar el sistema.
-- **Tema claro/oscuro** y tarjetas con logos en la versión GUI.
-- **Sin dependencias externas** y sin tocar la licencia (no incluye activación).
+- **Dual Modes:** Graphical User Interface (`install-gui.ps1`) and Console (`install-cli.ps1`).
+- **Supported Editions:** Office LTSC Professional Plus **2024** & **2021**; Office Professional Plus **2019**, **2016**, & **2013**.
+- **Architecture:** Automatic detection for 64-bit or 32-bit systems.
+- **Add-ons:** Optional inclusion for Project and Visio.
+- **10 Languages:** English, Spanish, French, German, Brazilian Portuguese, Italian, Dutch, Polish, Russian, and Japanese.
+- **Guided Workflow:** Every choice is explicitly selected on screen, and nothing is deployed without confirmation.
+- **Modern GUI Design:** Features native system theme matching (Dark/Light mode) and branded app logo tiles.
+- **Zero External Dependencies:** Automatically downloads the official Microsoft Office Deployment Tool (ODT) directly from Microsoft servers.
 
-## Tecnologías utilizadas
+---
 
-- **Lenguaje:** PowerShell 5.0+
-- **Herramientas:** Office Deployment Tool (ODT) de Microsoft
-- **Plataforma:** Windows 10 / 11
+## Requirements
 
-## Requisitos previos
+- **Windows 10 or 11**
+- **PowerShell 5.0 or higher**
+- **Administrator privileges**
+- **.NET Framework 4.5 or higher**
+- **Active Internet connection** (required to download ODT and Office setup files)
 
-- **Windows 10 u 11**
-- **PowerShell 5.0 o superior**
-- **Permisos de administrador**
-- **.NET Framework 4.5 o superior**
-- **Internet** (el ODT y los archivos de Office se descargan de Microsoft)
+---
 
-## Instalación
+## Project Structure
 
-Abre PowerShell como **administrador**. Si es la primera vez que ejecutas scripts:
-
-```powershell
-Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Bypass
-```
-
-**Versión con ventana (GUI):**
-
-```powershell
-irm https://raw.githubusercontent.com/Matthew-Garay/Microsoft-Office-installer/main/instalar-gui.ps1 | iex
-```
-
-**Versión en consola (CLI):**
-
-```powershell
-irm https://raw.githubusercontent.com/Matthew-Garay/Microsoft-Office-installer/main/instalar-cli.ps1 | iex
-```
-
-También puedes descargar el `.ps1` y ejecutarlo con clic derecho → *Ejecutar con PowerShell*.
-
-## Uso
-
-Ambas versiones te guían por: **versión → idioma → aplicaciones → resumen → confirmación**. Nada se instala sin tu confirmación, porque una instalación de Office no se deshace con facilidad.
-
-## Estructura del proyecto
-
-```
-Microsoft-Office-installer/
-├── instalar-gui.ps1        # Instalador con interfaz gráfica
-├── instalar-cli.ps1        # Instalador de línea de comandos
-├── index.html              # Página de presentación del proyecto
-└── README.md
-```
-
-## Notas
-
-- Este proyecto **instala** Office, no lo activa: necesitas una licencia propia.
-- Los temporales se eliminan solos al terminar.
-- Registro de cada ejecución: `%TEMP%\OfficeInstallerGUI_Install.log` y `%TEMP%\OfficeInstallerCLI_Install.log`.
-
-## Licencia
-
-Proyecto educativo y de código abierto; puedes usarlo libremente.
-
-## Autor
-
-**Matthew Garay** — [GitHub](https://github.com/Matthew-Garay)
-
+```text
+Microsoft-Office-Installer/
+├── install-gui.ps1         # Graphical interface installer script
+├── install-cli.ps1         # Command-line interface installer script
+├── index.html              # Project presentation web page
+└── README.md               # Documentation
