@@ -7,7 +7,7 @@
  </div>
 
 <p align="center">
-  <b>A tool for Windows that allows downloading and deploying Microsoft Office (from LTSC 2024 down to 2013) through a single PowerShell command; it includes both graphical and console interfaces and requires no external dependencies.</b>
+  <b>A tool for Windows that allows downloading and deploying Microsoft Office (from LTSC 2024 down to 2016) through a single PowerShell command; it includes both graphical and console interfaces and requires no external dependencies.</b>
 </p>
  
 ## About the Project
@@ -71,47 +71,66 @@ For the console interface:
  .\install-cli.ps1
  ```
 
+---
+
 ## System Requirements
 
-<ul>
-    <li><b>Operating System:</b> Windows 10 or Windows 11 (64-bit or 32-bit architecture).</li>
-    <li><b>PowerShell:</b> Version 5.0 or higher.</li>
-    <li><b>Permissions:</b> <b>Administrator</b> privileges (required for deploying Office packages).</li>
-    <li><b>Internet Connection:</b> Required to securely download official setup files.</li>
-</ul>
+<table align="center">
+  <tr>
+    <th align="left" width="220">Requirement</th>
+    <th align="left">Details</th>
+  </tr>
+  <tr>
+    <td><b>Operating System</b></td>
+    <td>Windows 10 or Windows 11 (64-bit or 32-bit architecture)</td>
+  </tr>
+  <tr>
+    <td><b>PowerShell</b></td>
+    <td>Version 5.0 or higher (included with Windows)</td>
+  </tr>
+  <tr>
+    <td><b>Permissions</b></td>
+    <td>Administrator privileges (required for deploying Office packages)</td>
+  </tr>
+  <tr>
+    <td><b>Internet Connection</b></td>
+    <td>Required to securely download the official setup files from Microsoft</td>
+  </tr>
+</table>
+
+---
 
 ## Project Structure
 
-<div style="background-color: #f6f8fa; border: 1px solid #d0d7de; border-radius: 6px; padding: 16px; font-family: ui-monospace, SFMono-Regular, SFMono, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 85%; line-height: 1.45; color: #24292e;">
-    <div style="font-weight: 600; margin-bottom: 8px;">Microsoft-Office-Installer/</div>
-    <div style="padding-left: 16px;">
-        ├── install-gui.ps1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # Main script with Graphical Interface (GUI)<br>
-        ├── install-cli.ps1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # Interactive Command Line Interface (CLI) script<br>
-        ├── index.html &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # Project presentation web page<br>
-        ├── LICENSE &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # MIT License file<br>
-        └── README.md &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # Official repository documentation
-    </div>
+```text
+Microsoft-Office-Installer/
+│
+├── install-gui.ps1    →  Graphical installer (GUI)
+│                         Version, language and application selection
+│
+├── install-cli.ps1    →  Console installer (CLI)
+│                         Interactive step-by-step installation
+│
+├── index.html         →  Project presentation web page
+│                         Multilingual (English, Spanish, French, German)
+│
+├── LICENSE            →  MIT License
+│
+└── README.md          →  Official repository documentation
+```
+
+---
+
+## Contact
+
+<div align="center">
+
+[![Gmail](https://skillicons.dev/icons?i=gmail)](mailto:1911.garay.perez@gmail.com "Gmail")&nbsp;&nbsp;&nbsp;[![GitHub](https://skillicons.dev/icons?i=github)](https://github.com/Matthew-Garay "GitHub")&nbsp;&nbsp;&nbsp;[![LinkedIn](https://skillicons.dev/icons?i=linkedin)](https://www.linkedin.com/in/matthewgarayperez/ "LinkedIn")
+
 </div>
 
-## Author & Contact
+---
 
-Developed by **Matthew Garay**.
-
-<br>
-
-<p>
-  <a href="mailto:1911.garay.perez@gmail.com" title="Gmail">
-    <img src="https://img.shields.io/badge/Gmail-EA4335?style=for-the-badge&logo=gmail&logoColor=white" alt="Gmail">
-  </a>
-  &nbsp;&nbsp;
-  <a href="https://github.com/Matthew-Garay" target="_blank" title="GitHub">
-    <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub">
-  </a>
-  &nbsp;&nbsp;
-  <a href="https://www.linkedin.com/in/matthewgarayperez/" target="_blank" title="LinkedIn">
-    <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn">
-  </a>
-</p>
-
-
-
+<div align="center">
+  <sub><b>Microsoft Office Installer</b> &nbsp;·&nbsp; Version 1.0 &nbsp;·&nbsp; MIT License</sub>
+</div>
