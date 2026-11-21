@@ -25,10 +25,10 @@ a:hover { text-decoration: underline; }
 .marca { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; }
 .marca img { width: 24px; height: 24px; }
 .marca span { color: var(--text-dim); font-weight: 400; }
-.idioma-btn { background: transparent; border: 1px solid var(--border); color: var(--text); font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: var(--radius); cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; }
-.idioma-btn:hover { border-color: var(--border-hover); background: var(--bg-elev-hover); }
+.lang-btn { background: transparent; border: 1px solid var(--border); color: var(--text); font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: var(--radius); cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; }
+.lang-btn:hover { border-color: var(--border-hover); background: var(--bg-elev-hover); }
 
-/* Banderas CSS completas y detalladas */
+/* Detailed CSS flags */
 .mini-flag { display: inline-block; width: 22px; height: 15px; border-radius: 2px; vertical-align: -2px; border: 1px solid rgba(0,0,0,0.2); position: relative; overflow: hidden; background-repeat: no-repeat; }
 .flag-us { background-color: #b22234; background-image: linear-gradient(180deg, #b22234 0%, #b22234 7.69%, #ffffff 7.69%, #ffffff 15.38%, #b22234 15.38%, #b22234 23.07%, #ffffff 23.07%, #ffffff 30.76%, #b22234 30.76%, #b22234 38.45%, #ffffff 38.45%, #ffffff 46.14%, #b22234 46.14%, #b22234 53.84%, #ffffff 53.84%, #ffffff 61.53%, #b22234 61.53%, #b22234 69.22%, #ffffff 69.22%, #ffffff 76.91%, #b22234 76.91%, #b22234 84.60%, #ffffff 84.60%, #ffffff 92.29%, #b22234 92.29%, #b22234 100%); }
 .flag-us::after { content: ""; position: absolute; top: 0; left: 0; width: 45%; height: 53.84%; background-color: #3c3b6e; }
@@ -37,43 +37,43 @@ a:hover { text-decoration: underline; }
 .flag-fr { background-color: #ffffff; background-image: linear-gradient(90deg, #002395 0%, #002395 33.3%, #ffffff 33.3%, #ffffff 66.6%, #ed2939 66.6%, #ed2939 100%); }
 .flag-de { background-color: #000000; background-image: linear-gradient(180deg, #000000 0%, #000000 33.3%, #dd0000 33.3%, #dd0000 66.6%, #ffcc00 66.6%, #ffcc00 100%); }
 
-.contenido { flex: 1; width: 100%; max-width: 860px; margin: 0 auto; padding: 50px 32px 80px; }
+.content { flex: 1; width: 100%; max-width: 860px; margin: 0 auto; padding: 50px 32px 80px; }
 .cabecera { text-align: center; margin-bottom: 40px; }
 .logo-office { width: 56px; height: 56px; margin-bottom: 14px; object-fit: contain; }
 h1 { font-size: 38px; font-weight: 700; margin-bottom: 12px; }
 h1 span { color: var(--text-dim); }
-.subtitulo { color: var(--text-dim); font-size: 15px; max-width: 640px; margin: 0 auto 20px; line-height: 1.5; }
-.fila-badges { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; align-items: center; }
+.subtitle { color: var(--text-dim); font-size: 15px; max-width: 640px; margin: 0 auto 20px; line-height: 1.5; }
+.badge-row { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; align-items: center; }
 .badge { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 500; padding: 4px 12px; border-radius: 100px; border: 1px solid var(--border); color: var(--text-dim); background: var(--bg-elev); }
 .badge-version { border-color: var(--accent-dim); background: var(--accent-dim); color: var(--accent); }
 .badge-so { border-color: var(--success-dim); background: var(--success-dim); color: var(--success); }
 
 .tabs { display: inline-flex; gap: 4px; padding: 4px; background: var(--bg-elev); border: 1px solid var(--border); border-radius: 100px; margin-bottom: 16px; }
 .tab { background: transparent; border: none; color: var(--text-dim); font-size: 13px; font-weight: 600; padding: 8px 22px; border-radius: 100px; cursor: pointer; }
-.tab.activo { background: var(--accent); color: #fff; }
+.tab.active { background: var(--accent); color: #fff; }
 
-.caja-comando-fila { display: flex; gap: 10px; margin-bottom: 32px; }
-.caja-comando { flex: 1; background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; font-family: var(--mono); font-size: 13px; color: var(--text); overflow-x: auto; white-space: nowrap; }
-.boton-copiar { background: var(--bg-elev); border: 1px solid var(--border); color: var(--text-dim); font-size: 13px; font-weight: 600; padding: 0 24px; border-radius: var(--radius); cursor: pointer; transition: 0.2s; }
-.boton-copiar:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
-.boton-copiar.copiado { border-color: var(--success); color: var(--success); background: var(--success-dim); }
+.command-row { display: flex; gap: 10px; margin-bottom: 32px; }
+.command-box { flex: 1; background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; font-family: var(--mono); font-size: 13px; color: var(--text); overflow-x: auto; white-space: nowrap; }
+.copy-btn { background: var(--bg-elev); border: 1px solid var(--border); color: var(--text-dim); font-size: 13px; font-weight: 600; padding: 0 24px; border-radius: var(--radius); cursor: pointer; transition: 0.2s; }
+.copy-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+.copy-btn.copied-state { border-color: var(--success); color: var(--success); background: var(--success-dim); }
 
-.seccion { margin-top: 36px; }
+.section { margin-top: 36px; }
 h2 { font-size: 18px; font-weight: 600; margin-bottom: 14px; }
 
 .grid-info { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; }
-.tarjeta-info { background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; font-size: 13px; }
-.tarjeta-info b { display: block; font-size: 13px; color: var(--text); margin-bottom: 6px; }
-.tarjeta-info span { color: var(--text-dim); line-height: 1.5; display: block; }
-.tarjeta-info code { display: block; background: var(--bg); padding: 8px; border-radius: 4px; font-family: var(--mono); font-size: 12px; margin-top: 6px; border: 1px solid var(--border); }
+.info-card { background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; font-size: 13px; }
+.info-card b { display: block; font-size: 13px; color: var(--text); margin-bottom: 6px; }
+.info-card span { color: var(--text-dim); line-height: 1.5; display: block; }
+.info-card code { display: block; background: var(--bg); padding: 8px; border-radius: 4px; font-family: var(--mono); font-size: 12px; margin-top: 6px; border: 1px solid var(--border); }
 
-/* Cuadrícula de apps con iconos */
+/* App grid with icons */
 .grid-apps { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
 .app-item { display: flex; align-items: center; gap: 10px; background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 14px; font-size: 13px; font-weight: 500; }
 .app-item img { width: 22px; height: 22px; object-fit: contain; }
 
-.pie { text-align: center; padding: 32px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; background: var(--bg-elev); }
-@media (max-width: 560px) { h1 { font-size: 28px; } .caja-comando-fila { flex-direction: column; } }
+.footer-note { text-align: center; padding: 32px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; background: var(--bg-elev); }
+@media (max-width: 560px) { h1 { font-size: 28px; } .command-row { flex-direction: column; } }
 </style>
 </head>
 <body>
@@ -83,16 +83,16 @@ h2 { font-size: 18px; font-weight: 600; margin-bottom: 14px; }
     <span>Microsoft Office Installer <span>· Matthew Garay</span></span>
   </div>
   <div>
-    <button class="idioma-btn" id="btn-idioma" onclick="cambiarIdioma()"><span class="mini-flag flag-us" id="flag-icon"></span> <span id="lbl-lang">EN</span></button>
+    <button class="lang-btn" id="btn-lang" onclick="toggleLanguage()"><span class="mini-flag flag-us" id="flag-icon"></span> <span id="lbl-lang">EN</span></button>
   </div>
 </nav>
 
-<main class="contenido">
+<main class="content">
   <header class="cabecera">
     <img src="https://img.icons8.com/color/96/microsoft-office-2019.png" alt="Office Logo" class="logo-office">
     <h1>Microsoft Office <span>Installer</span></h1>
-    <p class="subtitulo" id="t-sub">Microsoft Office Installer (LTSC 2024, 2021, 2019 and 2016) for Windows via a single PowerShell command. Includes GUI and CLI interfaces. Zero external dependencies.</p>
-    <div class="fila-badges">
+    <p class="subtitle" id="t-sub">Microsoft Office Installer (LTSC 2024, 2021, 2019 and 2016) for Windows via a single PowerShell command. Includes GUI and CLI interfaces. Zero external dependencies.</p>
+    <div class="badge-row">
       <span class="badge badge-so" id="badge-so">Windows · Detecting architecture...</span>
       <span class="badge">PowerShell 5.0+</span>
       <span class="badge">Zero Dependencies</span>
@@ -101,18 +101,18 @@ h2 { font-size: 18px; font-weight: 600; margin-bottom: 14px; }
 
   <section>
     <div class="tabs">
-      <button class="tab activo" id="tab-gui" onclick="cambiarTab('gui')">Window / GUI</button>
-      <button class="tab" id="tab-cli" onclick="cambiarTab('cli')">Console / CLI</button>
+      <button class="tab active" id="tab-gui" onclick="switchTab('gui')">Window / GUI</button>
+      <button class="tab" id="tab-cli" onclick="switchTab('cli')">Console / CLI</button>
     </div>
-    <div class="caja-comando-fila">
-      <div class="caja-comando" id="comando">irm https://raw.githubusercontent.com/Matthew-Garay/Microsoft-Office-Installer/main/install-gui.ps1 | iex</div>
-      <button class="boton-copiar" id="btn-copiar" onclick="copiar()">Copy</button>
+    <div class="command-row">
+      <div class="command-box" id="command">irm https://raw.githubusercontent.com/Matthew-Garay/Microsoft-Office-Installer/main/install-gui.ps1 | iex</div>
+      <button class="copy-btn" id="btn-copy" onclick="copyCommand()">Copy</button>
     </div>
   </section>
 
-  <section class="seccion">
+  <section class="section">
     <h2 id="t-vrs">Supported versions</h2>
-    <div class="fila-badges" style="justify-content: flex-start;">
+    <div class="badge-row" style="justify-content: flex-start;">
       <span class="badge badge-version">Office LTSC 2024</span>
       <span class="badge badge-version">Office LTSC 2021</span>
       <span class="badge badge-version">Office 2019</span>
@@ -121,26 +121,26 @@ h2 { font-size: 18px; font-weight: 600; margin-bottom: 14px; }
     </div>
   </section>
 
-  <section class="seccion">
+  <section class="section">
     <h2 id="t-inst">How to Install</h2>
     <div class="grid-info">
-      <div class="tarjeta-info">
+      <div class="info-card">
         <b id="i1-t">1. Open PowerShell as Administrator</b>
         <span id="i1-d">Search for PowerShell in the Start menu, right-click it, and select "Run as administrator".</span>
       </div>
-      <div class="tarjeta-info">
+      <div class="info-card">
         <b id="i2-t">2. Execution Policy (First time only)</b>
         <span id="i2-d">If it's your first time running scripts, run this command first:</span>
         <code>Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Bypass</code>
       </div>
-      <div class="tarjeta-info">
+      <div class="info-card">
         <b id="i3-t">3. Copy & Run the Command</b>
         <span id="i3-d">Choose above between GUI or CLI, click Copy, paste it into PowerShell and press Enter.</span>
       </div>
     </div>
   </section>
 
-  <section class="seccion">
+  <section class="section">
     <h2 id="t-pkg">Included Office Suite Content</h2>
     <div class="grid-apps">
       <div class="app-item"><img src="https://img.icons8.com/color/48/microsoft-word-2019.png" alt="Word"> Microsoft Word</div>
@@ -156,14 +156,14 @@ h2 { font-size: 18px; font-weight: 600; margin-bottom: 14px; }
     </div>
   </section>
 
-  <section class="seccion">
+  <section class="section">
     <h2 id="t-tech">Technology, Version & Purpose</h2>
     <div class="grid-info">
-      <div class="tarjeta-info">
+      <div class="info-card">
         <b id="tc1-t">Technology & Version</b>
         <span id="tc1-d">Powered by Microsoft Office Deployment Tool (ODT) Version 18227. Uses native XML configuration streams.</span>
       </div>
-      <div class="tarjeta-info">
+      <div class="info-card">
         <b id="tc2-t">Why it was used</b>
         <span id="tc2-d">To allow clean, direct downloads and installations straight from official Microsoft servers without requiring third-party ISO files, bloatware, or external tools.</span>
       </div>
@@ -171,7 +171,7 @@ h2 { font-size: 18px; font-weight: 600; margin-bottom: 14px; }
   </section>
 </main>
 
-<footer class="pie">
+<footer class="footer-note">
   Microsoft Office Installer · 2026 · Created by <a href="https://github.com/Matthew-Garay" target="_blank">Matthew Garay</a> · <a href="https://github.com/Matthew-Garay/Microsoft-Office-Installer" id="t-foot" target="_blank">Source Code on GitHub</a>
 </footer>
 
@@ -243,7 +243,7 @@ const d = {
 let langKeys = Object.keys(d), currentLangIdx = 0, currentTab = 'gui';
 let osBits = /Win64|WOW64|x86_64|x64/i.test(navigator.userAgent) ? "64" : "32";
 
-function cambiarIdioma() {
+function toggleLanguage() {
   currentLangIdx = (currentLangIdx + 1) % langKeys.length;
   let lang = langKeys[currentLangIdx], t = d[lang];
   
@@ -266,21 +266,21 @@ function cambiarIdioma() {
   document.documentElement.lang = lang;
 }
 
-function cambiarTab(tab) {
+function switchTab(tab) {
   currentTab = tab;
-  document.getElementById("comando").textContent = urls[tab];
-  document.getElementById("tab-gui").classList.toggle("activo", tab === 'gui');
-  document.getElementById("tab-cli").classList.toggle("activo", tab === 'cli');
+  document.getElementById("command").textContent = urls[tab];
+  document.getElementById("tab-gui").classList.toggle("active", tab === 'gui');
+  document.getElementById("tab-cli").classList.toggle("active", tab === 'cli');
 }
 
-function copiar() {
-  let texto = document.getElementById("comando").textContent;
-  let btn = document.getElementById("btn-copiar");
-  navigator.clipboard.writeText(texto).then(() => {
-    btn.classList.add("copiado");
+function copyCommand() {
+  let text = document.getElementById("command").textContent;
+  let btn = document.getElementById("btn-copy");
+  navigator.clipboard.writeText(text).then(() => {
+    btn.classList.add("copied-state");
     btn.textContent = d[langKeys[currentLangIdx]].copied + " ✓";
     setTimeout(() => {
-      btn.classList.remove("copiado");
+      btn.classList.remove("copied-state");
       btn.textContent = d[langKeys[currentLangIdx]].copy;
     }, 1800);
   });
